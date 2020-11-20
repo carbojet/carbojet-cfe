@@ -1,5 +1,5 @@
 <template>    
-    <form @submit.prevent="onSearchFormSubmit" class="flex w-full">
+    <form @submit.prevent="onSearchFormSubmit" class="flex w-full" style="color:#333333;">
     <input
     class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
     type="text"
@@ -10,9 +10,13 @@
     </form>        
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
+import { EventBus } from "../plugins/event-bus.js";
 export default {
-    name : 'SearchForm',
+    name: 'SearchForm',
+    components:{
+        EventBus,
+    },
     data(){
       return {
           queryText :'',
@@ -21,35 +25,15 @@ export default {
       }        
     },
     methods : {
-      async onSearchFormSubmit(){
-        if(this.$route.path==='/'){
-          this.$router.push({name :'results',params:{queryText:this.queryText} })
-           
-        }else{
-          /* if it not a index page or root page*/
-          if(this.$route.params.queryText!==''){
-            this.searchquery = this.$route.params.queryText
-          }
-          if(this.queryText!==''){
-            this.searchquery = this.queryText
-          }
-          console.log(this.searchquery)  
-          const config = {
-            headers : {
-            'Accept' : 'application/json',
+        async onSearchFormSubmit(){
+            if(this.$route.path==='/'){
+                this.$router.push({name :'results',params:{queryText:this.queryText} }) 
+            }else if(this.$route.path==='/results'){            
+                 EventBus.$emit("clicked-event", this.queryText)
+            }else{
+                this.$router.push({name :'results',params:{queryText:this.queryText} })
             }
-          }
-          try{
-            const res = await axios.get('https://fwemoviedb.herokuapp.com/3/search/movie?api_key=e800e93ef4806616964242bbd2619ae1&query='+this.searchquery,config);
-            this.results = res.data.results       
-          }catch(e){
-            console.log(e)
-          }
-        }
-
-        
-
-      }
+        }        
     }
 }
 </script>

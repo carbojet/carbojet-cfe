@@ -1,19 +1,18 @@
 <template>
   <div>    
-    <DefaultAppHeader />
+    <Header />
     <Nuxt />
   </div>
 </template>
 <script>
-import DefaultAppHeader from '../components/defaultAppHeader';
-export default {
-  
+import Header from '../components/Header';
+export default {  
   components : {
-    DefaultAppHeader,
+    Header,
   }
-
 }
 </script>
+
 <style>
 html {
   font-family:

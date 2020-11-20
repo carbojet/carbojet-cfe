@@ -1,8 +1,8 @@
 <template>
-    <div class="container mx-auto">
+  <div class="container mx-auto">
       <section
         class="hero h-64 px-6 text-gray-100 flex flex-col justify-center bg-no-repeat"
-        :style="'background-image: url('+imgurl+');background-size: cover;'">
+        :style="'background-image: url('+bannerImg+');background-size: cover;'">
         <h3 class="text-4xl font-bold">Welcome!</h3>
         <h4 class="text-xl font-semibold">
           Worlds #1 search engine for Movie and TV Series.
@@ -14,69 +14,44 @@
       <section class="mt-4">
         <h3 class="text-xl">Popular Movies & TV Series</h3>
         <div class="flex flex-wrap -mx-1 lg:-mx-4">
-          <Popular v-for="popData in popularList" :key="popData.id" :popular="popData" />
+          <CardListBox v-for="MovieCard in MovieCards" :key="MovieCard.id" :MovieCard="MovieCard" />
         </div>
       </section>
     </div>
 </template>
 
 <script>
-import Popular from '../components/popular';
-import SearchForm from '../components/searchForm';
-import backgroundUrl from '~/assets/hero.jpg';
-import axios from "axios";
+import CardListBox from '../components/CardListBox';
+import SearchForm from '../components/SearchForm';
+import backgroundUrl from '~/assets/images/hero.jpg';
+import axios from 'axios';
 export default {
-    components : {
-      Popular,
-      SearchForm
-    },
-    data(){
-      return{
-        popularList:[],
-        imgurl:backgroundUrl,
+  components : {
+    CardListBox,
+    SearchForm,
+  },
+  data(){
+    return{
+      bannerImg : backgroundUrl,
+      MovieCards : []
+    }
+  },
+  /*load action fetch popular list */
+  async created(){
+    const config = {
+      headers : {
+        'Accept' : 'application/json',
       }
-    },
-    /*load action fetch popular list */
-    async created(){
-      const config = {
-        headers : {
-          'Accept' : 'application/json',
-        }
-      }
-      try{
-        const res = await axios.get('https://fwemoviedb.herokuapp.com/3/movie/popular?api_key=e800e93ef4806616964242bbd2619ae1',config);
-        this.popularList = res.data.results;
-        //console.log(res.data)
-      }catch(e){
-        console.log(e)
-      }
-      
-    },
-    methods : {
-      /* Search query with title */
-      /*
-      async searchText(text){
-          const config = {
-            headers : {
-              'Accept' : 'application/json',
-            }
-          }
-          try{
-            const res = await axios.get('https://fwemoviedb.herokuapp.com/3/search/movie?api_key=e800e93ef4806616964242bbd2619ae1&query'+this.searchText,config);
-            this.searchResult = res.data.results;
-            //console.log(res.data)
-          }catch(e){
-            console.log(e)
-          }
-      }
-      
-      onSearchFormSubmit(querytext){
-          redirect({ name: 'results', params: { query: querytext } })
-      }
-      */
-    },
-    /*index Header */
-    head(){
+    }
+    try{
+      const res = await axios.get('https://carbojet-fe-backend.herokuapp.com/list',config);
+      this.MovieCards = res.data.results;
+      //console.log(res.data)
+    }catch(e){
+      console.log(e)
+    }    
+  },
+  head(){
         return {
             title : 'Fireworks Entertainment',
             meta:[
@@ -87,7 +62,6 @@ export default {
                 }
             ]
         }
-    }
-    
+    },
 }
 </script>

@@ -1,36 +1,37 @@
-<template>    
-    <ListDetail :LDetail = "LDetail" />
+<template>
+    <DetailBox :DBox="DBox" />
 </template>
 
 <script>
-import ListDetail from '../../../components/listDetail';
+import DetailBox from '../../../components/DetailBox';
 import axios from "axios";
 export default {
-
+    components : {
+        DetailBox
+    },
     data(){
-      return{
-        LDetail:{}
-      }
+        return{
+            DBox:{}
+        }
     },
     async created(){
-      const config = {
-        headers : {
-          'Accept' : 'application/json',
+        const config = {
+            headers : {
+                'Accept' : 'application/json',
+            }
         }
-      }
-      try{
-        const res = await axios.get('https://fwemoviedb.herokuapp.com/3/movie/'+this.$route.params.id+'?api_key=e800e93ef4806616964242bbd2619ae1',config);
-        this.LDetail = res.data;
-        console.log(res.data)
-      }catch(e){
-        console.log(e)
-      }
-      
+        try{
+            const res = await axios.get('https://carbojet-fe-backend.herokuapp.com/details/'+this.$route.params.id,config);
+            this.DBox = res.data;
+            //console.log(res.data)
+        }catch(e){
+            console.log(e)
+        }
     },
-    /*index Header */
+    /* Header meta */
     head(){
         return {
-            title : this.LDetail.title,
+            title : this.DBox.title,
             meta:[
                 {
                     hid:"description",
@@ -40,9 +41,5 @@ export default {
             ]
         }
     },
-    /* popular list component */
-    components : {
-      ListDetail
-    }
 }
 </script>
